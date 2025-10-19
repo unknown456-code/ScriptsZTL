@@ -1,30 +1,43 @@
-local plr = game.Players.LocalPlayer
+-- LocalScript. Safe GUI, with guards.
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
 if not plr then return end
 local pg = plr:WaitForChild("PlayerGui")
 
-local gui = Instance.new("ScreenGui")
-gui.Name = "PanelForModModeration"
-gui.Parent = pg
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+-- remove previous
+local existing = pg:FindFirstChild("PanelForModModeration")
+if existing then existing:Destroy() end
 
-local bg = Instance.new("Frame", gui)
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "PanelForModModeration"
+screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.Parent = pg
+
+local bg = Instance.new("Frame")
 bg.Name = "ModeratorFrame"
-bg.AnchorPoint = Vector2.new(0.5, 0.5)
-bg.Position = UDim2.new(0.5, 0, 0.5, 0)
-bg.Size = UDim2.new(1, 0, 1, 0)
+bg.Parent = screenGui
+bg.AnchorPoint = Vector2.new(0.5,0.5)
+bg.Position = UDim2.new(0.5,0,0.5,0)
+bg.Size = UDim2.new(1,0,1,0)
 bg.BackgroundColor3 = Color3.fromRGB(255,255,255)
 bg.BorderSizePixel = 0
 
-local btn = Instance.new("TextButton", bg)
-btn.Name = "GiveSecretRandom"
-btn.Size = UDim2.new(1, 0, 1, 0)
-btn.BackgroundTransparency = 1
-btn.Font = Enum.Font.SourceSansBold
-btn.Text = "CRY ABOUT EXPLOIT USER"
-btn.TextScaled = true
-btn.TextWrapped = true
-btn.TextColor3 = Color3.fromRGB(0,0,0)
+local title = Instance.new("TextLabel")
+title.Parent = bg
+title.AnchorPoint = Vector2.new(0.5,0.5)
+title.Position = UDim2.new(0.5,0,0.5,0)
+title.Size = UDim2.new(0.9,0,0.3,0)
+title.BackgroundTransparency = 1
+title.Text = "CRY ABOUT EXPLOIT USER"
+title.TextColor3 = Color3.new(0,0,0)
+title.TextScaled = true
+title.Font = Enum.Font.GothamBlack
 
-btn.MouseButton1Click:Connect(function()
-    gui:Destroy()
-end
+-- dismiss on click / Esc
+bg.Active = true
+bg.InputBegan:Connect(function(inp)
+    if inp.UserInputType == Enum.UserInputType.MouseButton1 then
+        screenGui:Destroy()
+    end
+end)
